@@ -1,0 +1,61 @@
+How to list recently commented Custom Post Type. 
+
+
+    <?php $recent_comments = get_comments( array( 
+            'post_type' => 'YOUR-CPT',
+            'number'      => 5, // number of comments to retrieve.
+            'status'      => 'approve', // we only want approved comments.
+            'post_status' => 'publish' // limit to published comments.
+        ) );
+            foreach ( (array) $recent_comments as $comment ) : ?> 
+                <div>
+                <div class="">		
+                <img class="uk-border-circle" width="20" height="20" style="display: inline;" 
+                src="<?php echo get_avatar_url( $comment, 128); ?>">
+                
+                <?php if ( $comment->user_id != '0' ) {
+                    echo '<span class="some-class">' . get_user_meta( $comment->user_id, 'nickname', true ) . '</span>';
+                    } else {
+                    echo '<span class="other-class">' . get_comment_author_link() . '</span>';
+                } ?> On 
+                <a href=" <?php echo esc_url( get_comment_link( $comment ) ) ?>"> <?php echo get_the_title( $comment->comment_post_ID) ?> </a> <br />
+                <?php echo $comment->comment_content ?> <br /> 
+                <span class="uk-text-meta uk-margin-remove-top">
+               <?php $d = "l, F jS, Y";
+                $comment_date = get_comment_date( $d, $comment );
+                echo $comment_date ?></span>
+                </div></div>
+                <?php endforeach; ?>
+
+
+How to list recent Custom Post Type Authors
+
+
+    <?php foreach ( get_users(array(
+        'exclude' => '2',
+        'post_type' => 'YOUR-CPT',
+        'order'=>'DESC',
+        'orderby'=>'post_count',
+        'number'=>5,
+    
+        ) ) as $user ) : ?>
+    
+    <div class="">
+        <div class="uk-card-header">
+            <div class="uk-grid-small uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                <img class="uk-border-circle" width="40" height="40" style="display: inline;" 
+    		src="<?php echo get_avatar_url($user->user_email, '64'); ?>">
+                </div>
+                <div class="uk-width-expand">
+                    <h3 class="uk-card-title uk-margin-remove-bottom"><?php echo $user->nickname; ?></h3>
+                    <p class="uk-text-meta uk-margin-remove-top"><a href="<?php echo get_author_posts_url( $user->ID ); ?>">View Author posts
+                    (<?php echo count_user_posts($user->ID, $post_type = 'YOUR-CPT') ?>)</a>     
+                   </p>
+                </div>
+            </div>
+        </div>
+       </div>
+       <br>
+     
+    <?php endforeach; ?>
