@@ -1,0 +1,16 @@
+//show atribute name "colour1"
+<?php
+	
+$item_data = $cart_item['data'];
+$attributes = $item_data->get_attributes();
+
+    foreach ( $attributes as $attribute ) 
+	{      
+		if ( $attribute['name'] == 'colour1' ) {
+            $out ='';
+            $out .= $attribute['name'] . ': ';
+            $out .= $attribute['value'] . '<br />';
+            echo $out;
+    }
+	}
+	?>
