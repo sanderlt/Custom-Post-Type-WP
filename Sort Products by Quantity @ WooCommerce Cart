@@ -1,0 +1,42 @@
+/**
+* @snippet       Sort Products by Quantity @ WooCommerce Cart
+* @how-to        
+* @author        Alex Leteckij
+* @testedwith    Woo 3
+* @donate $9     
+*/
+ 
+ 
+add_action( 'woocommerce_cart_loaded_from_session', 'wc_cart_order_items_by_quantity' );
+
+function wc_cart_order_items_by_quantity( $cart ) {
+
+	//if the cart is empty do nothing
+	if ( empty( $cart->cart_contents ) ) {
+		return;
+	}
+
+	//this is an array to collect cart items
+	$cart_sort = array();
+
+	//add cart item inside the array
+	foreach ( $cart->cart_contents as $cart_item_key => $cart_item ) {
+		$cart_sort[ $cart_item_key ] = $cart->cart_contents[ $cart_item_key ];
+	}
+
+	//call the function to sort cart items
+	@uasort( $cart_sort, 'wc_sort_by_quantity_desc' );
+
+
+	//replace the cart contents with the array sorted
+	$cart->cart_contents = $cart_sort;
+
+}
+
+function wc_sort_by_quantity( $cart_item_a, $cart_item_b ) {
+	return $cart_item_a['quantity'] > $cart_item_b['quantity'];
+}
+
+function wc_sort_by_quantity_desc( $cart_item_a, $cart_item_b ) {
+	return $cart_item_a['quantity'] < $cart_item_b['quantity'];
+}
